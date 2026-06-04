@@ -29,13 +29,15 @@ const sitemap = readFileSync(join(publicDir, "sitemap.xml"), "utf8");
 const finalAssets = readdirSync(assetsDir).filter((file) => /^gabriela-template-\d{2}\.jpg$/.test(file));
 const webpAssets = readdirSync(assetsDir).filter((file) => /^gabriela-template-\d{2}\.webp$/.test(file));
 const originalAssets = readdirSync(docsDir).filter((file) => /^\d+\.png$/.test(file));
+const publishedTemplates = ["01", "02", "03", "04", "05", "06", "09", "10", "11", "12"];
+const removedTemplates = ["07", "08"];
 
-check(finalAssets.length === 12, `esperava 12 assets finais, encontrei ${finalAssets.length}`);
-check(webpAssets.length === 12, `esperava 12 assets WebP, encontrei ${webpAssets.length}`);
+check(finalAssets.length === publishedTemplates.length, `esperava ${publishedTemplates.length} assets finais, encontrei ${finalAssets.length}`);
+check(webpAssets.length === publishedTemplates.length, `esperava ${publishedTemplates.length} assets WebP, encontrei ${webpAssets.length}`);
 check(originalAssets.length === 12, `esperava 12 templates originais, encontrei ${originalAssets.length}`);
 
-for (let index = 1; index <= 12; index += 1) {
-  const file = `gabriela-template-${String(index).padStart(2, "0")}.jpg`;
+for (const templateId of publishedTemplates) {
+  const file = `gabriela-template-${templateId}.jpg`;
   const webpFile = file.replace(".jpg", ".webp");
   check(html.includes(`assets/${file}`), `asset ${file} não está referenciado no HTML`);
   check(html.includes(`assets/${webpFile}`), `asset ${webpFile} não está referenciado no HTML`);
@@ -45,19 +47,37 @@ for (let index = 1; index <= 12; index += 1) {
   check(statSync(join(assetsDir, webpFile)).size < statSync(join(assetsDir, file)).size, `asset ${webpFile} não está menor que o JPG`);
 }
 
+removedTemplates.forEach((templateId) => {
+  const jpgFile = `gabriela-template-${templateId}.jpg`;
+  const webpFile = `gabriela-template-${templateId}.webp`;
+  check(!html.includes(`assets/${jpgFile}`), `asset removido ${jpgFile} ainda está referenciado no HTML`);
+  check(!html.includes(`assets/${webpFile}`), `asset removido ${webpFile} ainda está referenciado no HTML`);
+  check(!existsSync(join(assetsDir, jpgFile)), `asset removido ${jpgFile} ainda existe em public/assets`);
+  check(!existsSync(join(assetsDir, webpFile)), `asset removido ${webpFile} ainda existe em public/assets`);
+});
+
 const rootImages = readdirSync(root).filter((file) => /\.(png|jpe?g|webp)$/i.test(file));
 check(rootImages.length === 0, `há imagens soltas na raiz: ${rootImages.join(", ")}`);
 
 const h1Matches = html.match(/<h1[\s>]/gi) || [];
 check(h1Matches.length === 1, `esperava 1 H1, encontrei ${h1Matches.length}`);
 const pictureMatches = html.match(/<picture>/g) || [];
-check(pictureMatches.length === 12, `esperava 12 picture tags, encontrei ${pictureMatches.length}`);
+check(pictureMatches.length === publishedTemplates.length, `esperava ${publishedTemplates.length} picture tags, encontrei ${pictureMatches.length}`);
 const sectionCopyMatches = html.match(/class="section-copy sr-only"/g) || [];
-check(sectionCopyMatches.length === 12, `esperava 12 blocos de texto por seção, encontrei ${sectionCopyMatches.length}`);
+check(sectionCopyMatches.length === publishedTemplates.length, `esperava ${publishedTemplates.length} blocos de texto por seção, encontrei ${sectionCopyMatches.length}`);
 check(html.includes('<meta name="robots" content="index, follow"'), "meta robots ausente");
 check(html.includes('<link rel="canonical" href="https://'), "canonical absoluto ausente");
 check(robots.includes("Sitemap: https://advogada-gabriela.vercel.app/sitemap.xml"), "robots sem sitemap final");
 check(sitemap.includes("<loc>https://advogada-gabriela.vercel.app/</loc>"), "sitemap sem URL final");
+check(html.includes("Advogada de Inventários e de Imóveis"), "bloco de autoridade direto ausente");
+check(html.includes("Não deixe o patrimônio da sua família parado por falta de orientação."), "CTA emocional final ausente");
+
+[
+  "advogada em Iraí/RS",
+  "inventário em Iraí",
+  "regularização de imóveis no RS",
+  "advogada de inventário online",
+].forEach((term) => check(html.includes(term), `termo de SEO local ausente: ${term}`));
 
 const faqDetails = html.match(/<details class="faq-item"/g) || [];
 check(html.includes("faq-answers-panel"), "FAQ com respostas visíveis ausente");
