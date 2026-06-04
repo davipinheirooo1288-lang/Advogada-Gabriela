@@ -23,6 +23,8 @@ required.forEach((file) => check(existsSync(join(root, file)), `${file} não exi
 const html = readFileSync(join(publicDir, "index.html"), "utf8");
 const css = readFileSync(join(publicDir, "styles.css"), "utf8");
 const js = readFileSync(join(publicDir, "script.js"), "utf8");
+const robots = readFileSync(join(publicDir, "robots.txt"), "utf8");
+const sitemap = readFileSync(join(publicDir, "sitemap.xml"), "utf8");
 
 const finalAssets = readdirSync(assetsDir).filter((file) => /^gabriela-template-\d{2}\.jpg$/.test(file));
 const webpAssets = readdirSync(assetsDir).filter((file) => /^gabriela-template-\d{2}\.webp$/.test(file));
@@ -54,6 +56,8 @@ const sectionCopyMatches = html.match(/class="section-copy sr-only"/g) || [];
 check(sectionCopyMatches.length === 12, `esperava 12 blocos de texto por seção, encontrei ${sectionCopyMatches.length}`);
 check(html.includes('<meta name="robots" content="index, follow"'), "meta robots ausente");
 check(html.includes('<link rel="canonical" href="https://'), "canonical absoluto ausente");
+check(robots.includes("Sitemap: https://advogada-gabriela.vercel.app/sitemap.xml"), "robots sem sitemap final");
+check(sitemap.includes("<loc>https://advogada-gabriela.vercel.app/</loc>"), "sitemap sem URL final");
 
 const faqDetails = html.match(/<details class="faq-item"/g) || [];
 check(html.includes("faq-answers-panel"), "FAQ com respostas visíveis ausente");

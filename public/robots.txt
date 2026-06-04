@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://advogada-gabriela.vercel.app/sitemap.xml
