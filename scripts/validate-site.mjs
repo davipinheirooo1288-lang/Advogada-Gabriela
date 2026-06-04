@@ -70,7 +70,9 @@ check(html.includes('<link rel="canonical" href="https://'), "canonical absoluto
 check(robots.includes("Sitemap: https://advogada-gabriela.vercel.app/sitemap.xml"), "robots sem sitemap final");
 check(sitemap.includes("<loc>https://advogada-gabriela.vercel.app/</loc>"), "sitemap sem URL final");
 check(html.includes("Advogada de Inventários e de Imóveis"), "bloco de autoridade direto ausente");
-check(html.includes("Não deixe o patrimônio da sua família parado por falta de orientação."), "CTA emocional final ausente");
+check(html.includes("Regularize o imóvel, resolva o inventário e proteja o patrimônio da sua família com orientação jurídica clara e segura."), "CTA persuasivo final ausente");
+check(html.includes("Advogada de Inventários e de Imóveis, com atuação voltada à regularização patrimonial, sucessões e segurança jurídica familiar."), "frase de autoridade da seção sobre ausente");
+check(html.includes("Advogada em Iraí/RS para inventários, imóveis e regularização patrimonial."), "frase de SEO local agressiva ausente");
 
 [
   "advogada em Iraí/RS",

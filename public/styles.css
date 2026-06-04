@@ -253,6 +253,36 @@ button.hit {
   line-height: 1.5;
 }
 
+.profile-authority {
+  margin-top: -1px;
+  padding: clamp(30px, 4.5vw, 60px) clamp(16px, 4vw, 48px);
+  background: linear-gradient(180deg, #efe0d2 0%, #f8f0e8 100%);
+}
+
+.profile-authority-inner {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.profile-authority-inner h2 {
+  width: min(900px, 100%);
+  margin: 0 auto;
+  color: var(--brown);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.45rem, 3vw, 2.65rem);
+  font-weight: 500;
+  line-height: 1.12;
+}
+
+.profile-authority-inner p:last-child {
+  width: min(720px, 100%);
+  margin: 16px auto 0;
+  color: #594537;
+  font-size: clamp(1rem, 1.45vw, 1.12rem);
+  line-height: 1.7;
+}
+
 .faq-answers-panel {
   margin-top: -1px;
   padding: clamp(34px, 6vw, 84px) clamp(16px, 4vw, 48px);
@@ -538,11 +568,13 @@ button.hit {
   }
 
   .authority-inner h2,
+  .profile-authority-inner h2,
   .emotional-inner h2 {
     font-size: clamp(1.45rem, 8vw, 2.3rem);
   }
 
   .authority-support p,
+  .profile-authority-inner p:last-child,
   .emotional-lead {
     font-size: 1rem;
   }
